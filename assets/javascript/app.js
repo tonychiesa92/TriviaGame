@@ -3,7 +3,7 @@ var countDown = "";
 var currentQuestion = "";
 var currentChoices = "";
 var pointer = 0;
-var panel = $("#current-choices");
+var choiceList = $("#current-choices");
 
 // $("#count-down").text(countDown);
 // $("#current-question").text(currentQuestion);
@@ -28,15 +28,17 @@ var questions = [{
 
 $("#start-button").on("click", function () {
     $(this).hide();
+    run();
     game.displayQuestion(pointer);
     game.displayChoices(pointer);
+    
 });
 
 
 var game = {
     wins: 0,
     losses: 0,
-
+    
     displayQuestion: function (pointer) {
         currentQuestion = questions[pointer].question;
         $("#current-question").text(currentQuestion);
@@ -44,12 +46,31 @@ var game = {
     displayChoices: function (pointer) {
         for (var i = 0; i < questions[pointer].answer.length; i++) {
             var test = questions[pointer].answer[i];
-            panel.append("<button type='button' class='btn btn-secondary'>" + test + "</button><br>");
-            
+            choiceList.append("<button type='button' class='btn btn-secondary'>" + test + "</button><br>");
+
         }
 
-    },
-    timer: function () {
+    }
+}
 
-    },
+var number = 30;
+var intervalId;
+
+function run() {
+    clearInterval(intervalId);
+    intervalId = setInterval(decrement, 1000);
+}
+
+function decrement() {
+    number--;
+
+    $("#count-down").html("<h2>Time Remaining: " + number + " seconds</h2>");
+    if (number === 0) {
+        stop();
+        alert("Time Up!");
+    }
+}
+
+function stop() {
+    clearInterval(intervalId);
 }

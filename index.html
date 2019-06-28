@@ -12,13 +12,13 @@
     <title>Trivia Game</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    
+
 </head>
 
 <body>
@@ -26,7 +26,28 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <img src="assets/images/triviagame.png" class="img-fluid" alt="TriviaGame">
+        </div>
+    </div>
+    
+    <div class="col-md-4 text-center">
+        <button type="button" class="btn btn-primary btn-lg">Start Playing!</button>
+    </div>
+
+    <div id="show-number"></div>
+
+    <br>
+
+    <button id="stop">Stop</button>
+    <button id="resume">Resume</button>
+
+    <div class="countdown">Time Remaining</div>
+
+
     <script src="assets/javascript/app.js" async defer></script>
+    
 </body>
 
 </html>

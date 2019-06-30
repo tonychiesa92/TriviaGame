@@ -122,10 +122,11 @@ function decrement() {
     $("#count-down").html("<h2>Time Remaining: " + number + " seconds</h2>");
     if (number === 0) {
         stop();
-        
+        game.validateAnswer(pointer,15);
     }
 }
 
 function stop() {
     clearInterval(intervalId);
+    
 }

@@ -67,12 +67,22 @@ var game = {
     },
     validateAnswer: function(pointer,ans){
         stop();
+        $("#c0").hide();
+        $("#c1").hide();
+        $("#c2").hide();
+        $("#c3").hide();
         if (questions[pointer].answer[ans] === questions[pointer].correctAnswer){
             this.wins++;
+            $("#current-question").text("Correct!");
+            $("#current-choices").prepend("<img src='assets/images/correct-answer.gif'/>");
         }
         else{
            this.losses++;
+           $("#current-question").text("Wrong!");
+           $("#wrong-answer").text("The correct answer is: "+ questions[pointer].correctAnswer);
+           $("#current-choices").prepend("<img src='assets/images/wrong-answer.gif'/>");
         }
+        
     },
 }
 

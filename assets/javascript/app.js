@@ -2,7 +2,7 @@
 var countDown = "";
 var currentQuestion = "";
 var currentChoices = "";
-var pointer = 0;
+var pointer = 0;  //question wr are on
 var choiceList = $("#current-choices");
 
 // $("#count-down").text(countDown);
@@ -31,14 +31,16 @@ $("#start-button").on("click", function () {
     run();
     game.displayQuestion(pointer);
     game.displayChoices(pointer);
-    
+
 });
+
+
 
 
 var game = {
     wins: 0,
     losses: 0,
-    
+
     displayQuestion: function (pointer) {
         currentQuestion = questions[pointer].question;
         $("#current-question").text(currentQuestion);
@@ -46,11 +48,32 @@ var game = {
     displayChoices: function (pointer) {
         for (var i = 0; i < questions[pointer].answer.length; i++) {
             var test = questions[pointer].answer[i];
-            choiceList.append("<button type='button' class='btn btn-secondary'>" + test + "</button><br>");
-
+            //var str = "<button type='button' class='btn btn-secondary' id= 'c" + i + "'>" + test + "</button><br>";
+            //alert(str);
+            choiceList.append("<button type='button' class='btn btn-secondary' id='c" + i + "'>" + test + "</button><br>");
         }
-
-    }
+        $("#c0").on("click", function () {
+            game.validateAnswer(pointer,0);
+        });
+        $("#c1").on("click", function () {
+            game.validateAnswer(pointer,1);
+        });
+        $("#c2").on("click", function () {
+            game.validateAnswer(pointer,2);
+        });
+        $("#c3").on("click", function () {
+            game.validateAnswer(pointer,3);
+        });
+    },
+    validateAnswer: function(pointer,ans){
+        stop();
+        if (questions[pointer].answer[ans] === questions[pointer].correctAnswer){
+            this.wins++;
+        }
+        else{
+           this.losses++;
+        }
+    },
 }
 
 var number = 30;
@@ -74,3 +97,4 @@ function decrement() {
 function stop() {
     clearInterval(intervalId);
 }
+

@@ -2,10 +2,14 @@
 var countDown = "";
 var currentQuestion = "";
 var currentChoices = "";
-var pointer = 0;  //question wr are on
+var pointer = 0;  //question we are on
 var choiceList = $("#current-choices");
+var audio = new Audio("assets/images/theme.mp3");
+audio.loop= true;
+document.body.appendChild(audio);
 
-// $("#count-down").text(countDown);
+
+$("#count-down").hide();
 // $("#current-question").text(currentQuestion);
 // $("#current-choices").text(currentChoices);
 
@@ -28,10 +32,9 @@ var questions = [{
 
 $("#start-button").on("click", function () {
     $(this).hide();
-    run();
+    $("#count-down").show();
     game.displayQuestion(pointer);
-    game.displayChoices(pointer);
-
+    
 });
 
 
@@ -42,10 +45,11 @@ var game = {
     losses: 0,
 
     displayQuestion: function (pointer) {
+        run();
+        audio.play();
         currentQuestion = questions[pointer].question;
         $("#current-question").text(currentQuestion);
-    },
-    displayChoices: function (pointer) {
+   
         for (var i = 0; i < questions[pointer].answer.length; i++) {
             var test = questions[pointer].answer[i];
             //var str = "<button type='button' class='btn btn-secondary' id= 'c" + i + "'>" + test + "</button><br>";
@@ -53,38 +57,56 @@ var game = {
             choiceList.append("<button type='button' class='btn btn-secondary' id='c" + i + "'>" + test + "</button><br>");
         }
         $("#c0").on("click", function () {
-            game.validateAnswer(pointer,0);
+            game.validateAnswer(pointer, 0);
         });
         $("#c1").on("click", function () {
-            game.validateAnswer(pointer,1);
+            game.validateAnswer(pointer, 1);
         });
         $("#c2").on("click", function () {
-            game.validateAnswer(pointer,2);
+            game.validateAnswer(pointer, 2);
         });
         $("#c3").on("click", function () {
-            game.validateAnswer(pointer,3);
+            game.validateAnswer(pointer, 3);
         });
     },
-    validateAnswer: function(pointer,ans){
+    validateAnswer: function (pointer, ans) {
         stop();
         $("#c0").hide();
         $("#c1").hide();
         $("#c2").hide();
         $("#c3").hide();
-        if (questions[pointer].answer[ans] === questions[pointer].correctAnswer){
+        if (questions[pointer].answer[ans] === questions[pointer].correctAnswer) {
             this.wins++;
             $("#current-question").text("Correct!");
             $("#current-choices").prepend("<img src='assets/images/correct-answer.gif'/>");
         }
-        else{
-           this.losses++;
-           $("#current-question").text("Wrong!");
-           $("#wrong-answer").text("The correct answer is: "+ questions[pointer].correctAnswer);
-           $("#current-choices").prepend("<img src='assets/images/wrong-answer.gif'/>");
+        else {
+            this.losses++;
+            $("#current-question").text("Wrong!");
+            $("#wrong-answer").text("The correct answer is: " + questions[pointer].correctAnswer);
+            $("#current-choices").prepend("<img src='assets/images/wrong-answer.gif'/>");
         }
+        pointer++;
+
+        //delay goes here
+        setTimeout(function(){
+            game.reset(pointer);
+          }, 5000);
         
     },
+
+    reset: function(pointer){
+        number=30;
+        $("#count-down").html("<h2>Time Remaining: " + number + " seconds</h2>");
+        $("#current-question").text("");
+        $("#wrong-answer").text("");
+        $("#current-choices").text("");
+        game.displayQuestion(pointer);
+        
+    },
+    
 }
+
 
 var number = 30;
 var intervalId;
@@ -100,11 +122,10 @@ function decrement() {
     $("#count-down").html("<h2>Time Remaining: " + number + " seconds</h2>");
     if (number === 0) {
         stop();
-        alert("Time Up!");
+        
     }
 }
 
 function stop() {
     clearInterval(intervalId);
 }
-

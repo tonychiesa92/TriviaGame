@@ -31,7 +31,9 @@ var questions = [{
 $("#start-button").on("click", function () {
     $(this).hide();
     $("#count-down").show();
+    audio.play();
     game.displayQuestion(pointer);
+    
 
 });
 
@@ -42,6 +44,7 @@ $("#restart-button").on("click", function () {
     $("#incorrect").text("");
     $("#unanswered").text("");
     $("#count-down").show();
+    audio.play();
     game.displayQuestion(pointer);
     
 });
@@ -54,7 +57,7 @@ var game = {
 
     displayQuestion: function (pointer) {
         run();
-        audio.play();
+        
         currentQuestion = questions[pointer].question;
         $("#current-question").text(currentQuestion);
 

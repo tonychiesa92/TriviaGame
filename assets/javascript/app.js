@@ -5,16 +5,14 @@ var currentChoices = "";
 var pointer = 0;  //question we are on
 var choiceList = $("#current-choices");
 var audio = new Audio("assets/images/theme.mp3");
-audio.loop= true;
+audio.loop = true;
 document.body.appendChild(audio);
 
 
 $("#count-down").hide();
+$("#restart-button").hide();
 // $("#current-question").text(currentQuestion);
 // $("#current-choices").text(currentChoices);
-
-
-
 
 var questions = [{
     question: "What is the only country that borders both the Caspian Sea and the Persian Gulf?",
@@ -34,22 +32,32 @@ $("#start-button").on("click", function () {
     $(this).hide();
     $("#count-down").show();
     game.displayQuestion(pointer);
-    
+
 });
 
-
+$("#restart-button").on("click", function () {
+    $(this).hide();
+    $("#result-page").text("");
+    $("#correct").text("");
+    $("#incorrect").text("");
+    $("#unanswered").text("");
+    $("#count-down").show();
+    game.displayQuestion(pointer);
+    
+});
 
 
 var game = {
     wins: 0,
     losses: 0,
+    unanswered: 0,
 
     displayQuestion: function (pointer) {
         run();
         audio.play();
         currentQuestion = questions[pointer].question;
         $("#current-question").text(currentQuestion);
-   
+
         for (var i = 0; i < questions[pointer].answer.length; i++) {
             var test = questions[pointer].answer[i];
             //var str = "<button type='button' class='btn btn-secondary' id= 'c" + i + "'>" + test + "</button><br>";
@@ -70,7 +78,10 @@ var game = {
         });
     },
     validateAnswer: function (pointer, ans) {
-        stop();
+        if(ans !== 15){
+            stop();
+        }
+       
         $("#c0").hide();
         $("#c1").hide();
         $("#c2").hide();
@@ -81,32 +92,59 @@ var game = {
             $("#current-choices").prepend("<img src='assets/images/correct-answer.gif'/>");
         }
         else {
-            this.losses++;
+            // if (ans === 15) {
+            //     this.unanswered++;
+            // }
+            // else {
+                this.losses++;
+            // }
+
             $("#current-question").text("Wrong!");
             $("#wrong-answer").text("The correct answer is: " + questions[pointer].correctAnswer);
             $("#current-choices").prepend("<img src='assets/images/wrong-answer.gif'/>");
         }
+
         pointer++;
 
-        //delay goes here
-        setTimeout(function(){
-            game.reset(pointer);
-          }, 5000);
-        
+        if (pointer >= questions.length) {
+            game.results();
+        }
+        else{
+            setTimeout(function () {
+                game.reset(pointer);
+            }, 5000);
+        }
+
     },
 
-    reset: function(pointer){
-        number=30;
+    reset: function (pointer) {
+        number = 30;
         $("#count-down").html("<h2>Time Remaining: " + number + " seconds</h2>");
         $("#current-question").text("");
         $("#wrong-answer").text("");
         $("#current-choices").text("");
         game.displayQuestion(pointer);
-        
-    },
-    
-}
 
+    },
+
+    results: function () {
+        $("#count-down").hide();
+        $("#restart-button").show();
+       audio.pause();
+       audio.currentTime = 0;
+        $("#current-question").text("");
+        $("#wrong-answer").text("");
+        $("#current-choices").text("");
+        $("#result-page").text("All done, here is how you did!");
+        $("#correct").text("Correct Answers: " + this.wins);
+        $("#incorrect").text("Incorrect Answers: " + this.losses);
+        $("#unanswered").text("Unanswered: " + this.unanswered);
+        this.wins=0;
+        this.losses=0;
+        this.unanswered=0;
+        pointer=0;
+    }
+}
 
 var number = 30;
 var intervalId;
@@ -122,11 +160,16 @@ function decrement() {
     $("#count-down").html("<h2>Time Remaining: " + number + " seconds</h2>");
     if (number === 0) {
         stop();
-        game.validateAnswer(pointer,15);
+        game.validateAnswer(pointer, 15);
     }
 }
 
 function stop() {
     clearInterval(intervalId);
-    
+
 }
+
+// display wins looses
+//format
+//more questions
+//

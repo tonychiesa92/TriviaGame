@@ -1,19 +1,17 @@
-// set variables
+// set  global variables
 var countDown = "";
 var currentQuestion = "";
 var currentChoices = "";
-var pointer = 0;  //question we are on
+var pointer = 0;  // question we are on
 var choiceList = $("#current-choices");
 var audio = new Audio("assets/images/theme.mp3");
 audio.loop = true;
 document.body.appendChild(audio);
 
-
 $("#count-down").hide();
 $("#restart-button").hide();
-// $("#current-question").text(currentQuestion);
-// $("#current-choices").text(currentChoices);
 
+// Question/Answer array
 var questions = [{
     question: "What is the only country that borders both the Caspian Sea and the Persian Gulf?",
     answer: ["Iraq", "Iran", "Saudi Arabia", "Turkey"],
@@ -26,17 +24,31 @@ var questions = [{
     question: "What city is the capital of North Dakota?",
     answer: ["Fargo", "Grand Forks", "Pierre", "Bismark"],
     correctAnswer: "Bismark"
+},{
+    question: "which of the following items was owned by the fewest U.S. homes in 1990?",
+    answer: ["Home Computers", "Compact Disk Player", "Cordless Phone", "Dishwasher"],
+    correctAnswer: "Compact Disk Player"
+},{
+    question: "What year did cigarette commercials stop appearing on TV?",
+    answer: ["1971", "1966", "1977", "1980"],
+    correctAnswer: "1971"
+},{
+    question: "In the 1972 chess tournament held in Reykjavik, Iceland, who did Bobby Fischer defeat?",
+    answer: ["Tigran Petrosian", "Anatoly Karpov", "Gary Kasparov", "Boris Spassky"],
+    correctAnswer: "Boris Spassky"
 }];
 
+var timeoutNum = questions.length + 5;
+
+// start button
 $("#start-button").on("click", function () {
     $(this).hide();
     $("#count-down").show();
     audio.play();
-    game.displayQuestion(pointer);
-    
-
+    game.displayQuestion();
 });
 
+// restart button
 $("#restart-button").on("click", function () {
     $(this).hide();
     $("#result-page").text("");
@@ -45,17 +57,18 @@ $("#restart-button").on("click", function () {
     $("#unanswered").text("");
     $("#count-down").show();
     audio.play();
-    game.displayQuestion(pointer);
-    
+    game.displayQuestion();
 });
 
-
+// game object
 var game = {
     wins: 0,
     losses: 0,
     unanswered: 0,
 
-    displayQuestion: function (pointer) {
+    // display question and choices
+    displayQuestion: function () {
+
         run();
         
         currentQuestion = questions[pointer].question;
@@ -63,28 +76,29 @@ var game = {
 
         for (var i = 0; i < questions[pointer].answer.length; i++) {
             var test = questions[pointer].answer[i];
-            //var str = "<button type='button' class='btn btn-secondary' id= 'c" + i + "'>" + test + "</button><br>";
-            //alert(str);
-            choiceList.append("<button type='button' class='btn btn-secondary' id='c" + i + "'>" + test + "</button><br>");
+            choiceList.append("<button type='button' class='btn btn-outline-secondary btn-block' id='c" + i + "'>" + test + "</button><br>");
         }
         $("#c0").on("click", function () {
-            game.validateAnswer(pointer, 0);
+            game.validateAnswer(0);
         });
         $("#c1").on("click", function () {
-            game.validateAnswer(pointer, 1);
+            game.validateAnswer(1);
         });
         $("#c2").on("click", function () {
-            game.validateAnswer(pointer, 2);
+            game.validateAnswer(2);
         });
         $("#c3").on("click", function () {
-            game.validateAnswer(pointer, 3);
+            game.validateAnswer(3);
         });
     },
-    validateAnswer: function (pointer, ans) {
-        if(ans !== 15){
+
+    // checking answer
+    validateAnswer: function (ans) {
+       
+        if (ans !== timeoutNum) {
             stop();
         }
-       
+
         $("#c0").hide();
         $("#c1").hide();
         $("#c2").hide();
@@ -95,14 +109,15 @@ var game = {
             $("#current-choices").prepend("<img src='assets/images/correct-answer.gif'/>");
         }
         else {
-            // if (ans === 15) {
-            //     this.unanswered++;
-            // }
-            // else {
+            if (ans === timeoutNum) {
+                this.unanswered++;
+                $("#current-question").text("Unanswered!");
+            }
+            else {
                 this.losses++;
-            // }
+                $("#current-question").text("Wrong!");
+            }
 
-            $("#current-question").text("Wrong!");
             $("#wrong-answer").text("The correct answer is: " + questions[pointer].correctAnswer);
             $("#current-choices").prepend("<img src='assets/images/wrong-answer.gif'/>");
         }
@@ -110,31 +125,36 @@ var game = {
         pointer++;
 
         if (pointer >= questions.length) {
-            game.results();
-        }
-        else{
             setTimeout(function () {
-                game.reset(pointer);
+                game.results();
+
             }, 5000);
         }
+        else {
 
+            setTimeout(function () {
+                game.reset();
+
+            }, 5000);
+        }
     },
 
-    reset: function (pointer) {
+    // reset variables for next question
+    reset: function () {
         number = 30;
         $("#count-down").html("<h2>Time Remaining: " + number + " seconds</h2>");
         $("#current-question").text("");
         $("#wrong-answer").text("");
         $("#current-choices").text("");
-        game.displayQuestion(pointer);
-
+        game.displayQuestion();
     },
 
+    // results page
     results: function () {
         $("#count-down").hide();
         $("#restart-button").show();
-       audio.pause();
-       audio.currentTime = 0;
+        audio.pause();
+        audio.currentTime = 0;
         $("#current-question").text("");
         $("#wrong-answer").text("");
         $("#current-choices").text("");
@@ -142,13 +162,14 @@ var game = {
         $("#correct").text("Correct Answers: " + this.wins);
         $("#incorrect").text("Incorrect Answers: " + this.losses);
         $("#unanswered").text("Unanswered: " + this.unanswered);
-        this.wins=0;
-        this.losses=0;
-        this.unanswered=0;
-        pointer=0;
+        this.wins = 0;
+        this.losses = 0;
+        this.unanswered = 0;
+        pointer = 0;
     }
 }
 
+// timer functions
 var number = 30;
 var intervalId;
 
@@ -163,7 +184,7 @@ function decrement() {
     $("#count-down").html("<h2>Time Remaining: " + number + " seconds</h2>");
     if (number === 0) {
         stop();
-        game.validateAnswer(pointer, 15);
+        game.validateAnswer(timeoutNum);
     }
 }
 
@@ -171,8 +192,3 @@ function stop() {
     clearInterval(intervalId);
 
 }
-
-// display wins looses
-//format
-//more questions
-//

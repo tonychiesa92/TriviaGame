@@ -1,6 +1,5 @@
 body{
     background-image: url(../images/background.jpg);
-    
 }
 
 .jumbotron{
@@ -11,10 +10,17 @@ body{
     text-align: center;
 }
 
-
 .btn-primary{
+    padding: 20px;
+    margin-top: 40px;
     background-color: blue;
     color: yellow;
+}
+
+.btn-outline-secondary{
+    margin-bottom: 10px;
+    padding: 20px;
+    font-size: 30px;
 }
 
 #play-area{
@@ -25,38 +31,20 @@ body{
     margin: 0 auto;
     background: white;
     border: 10px solid grey;
-    
 }
 
 #current-question{
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
     color: blue;
     margin-bottom: 20px;
-   
 }
+
 #wrong-answer{
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
     color: blue;
     margin-bottom: 20px;
-    
-}
-
-#c0{
-    margin-bottom: 10px;
-}
-
-#c1{
-    margin-bottom: 10px;
-}
-
-#c2{
-    margin-bottom: 10px;
-}
-
-#c3{
-    margin-bottom: 10px;
 }
 
 #result-page{
@@ -66,17 +54,19 @@ body{
 }
 
 #correct{
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
     color: blue;
 }
+
 #incorrect{
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
     color: blue;
 }
+
 #unanswered{
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
     color: blue;
 }

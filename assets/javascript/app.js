@@ -25,7 +25,7 @@ var questions = [{
     answer: ["Fargo", "Grand Forks", "Pierre", "Bismark"],
     correctAnswer: "Bismark"
 },{
-    question: "which of the following items was owned by the fewest U.S. homes in 1990?",
+    question: "Which of the following items was owned by the fewest U.S. homes in 1990?",
     answer: ["Home Computers", "Compact Disk Player", "Cordless Phone", "Dishwasher"],
     correctAnswer: "Compact Disk Player"
 },{
